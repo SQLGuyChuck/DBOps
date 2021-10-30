@@ -1,0 +1,3 @@
+IF OBJECT_ID('Nums', 'U') IS NULL
+	CREATE TABLE Nums(n INT NOT NULL);
+GO

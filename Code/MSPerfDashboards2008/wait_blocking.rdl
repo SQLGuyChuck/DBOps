@@ -1,0 +1,1887 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSources>
+    <DataSource Name="DataSource1">
+      <DataSourceReference>DataSource1</DataSourceReference>
+      <rd:DataSourceID>d1a18f1f-14a0-47cc-9237-3f66c28707c2</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <BottomMargin>1in</BottomMargin>
+  <RightMargin>1in</RightMargin>
+  <ReportParameters>
+    <ReportParameter Name="version_string">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Report_Parameter_0</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+  </ReportParameters>
+  <rd:DrawGrid>true</rd:DrawGrid>
+  <InteractiveWidth>8.5in</InteractiveWidth>
+  <rd:SnapToGrid>true</rd:SnapToGrid>
+  <Body>
+    <ReportItems>
+      <Textbox Name="textbox12">
+        <Left>0.125in</Left>
+        <Top>0.125in</Top>
+        <rd:DefaultName>textbox12</rd:DefaultName>
+        <ZIndex>1</ZIndex>
+        <Visibility>
+          <Hidden>=IIf(Count(Fields!session_id.Value, "BLOCKING") = 0, true, false)</Hidden>
+        </Visibility>
+        <Width>7.875in</Width>
+        <Style>
+          <PaddingBottom>2pt</PaddingBottom>
+          <FontFamily>Tahoma</FontFamily>
+          <FontSize>8pt</FontSize>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Height>0.25in</Height>
+        <Value>This report shows aggregate information about each blocking chain, with the ability to view details about each session involved in the blocking chain.</Value>
+      </Textbox>
+      <List Name="list1">
+        <Sorting>
+          <SortBy>
+            <SortExpression>=sum(Fields!wait_time.Value)</SortExpression>
+            <Direction>Descending</Direction>
+          </SortBy>
+        </Sorting>
+        <Left>0.125in</Left>
+        <ReportItems>
+          <Rectangle Name="rectangle1">
+            <ReportItems>
+              <Table Name="table1">
+                <DataSetName>BLOCKING</DataSetName>
+                <Top>2.125in</Top>
+                <TableGroups>
+                  <TableGroup>
+                    <Grouping Name="table1_Group1">
+                      <Parent>=Fields!blocking_session_id.Value</Parent>
+                      <GroupExpressions>
+                        <GroupExpression>=Fields!session_id.Value</GroupExpression>
+                      </GroupExpressions>
+                    </Grouping>
+                  </TableGroup>
+                </TableGroups>
+                <ZIndex>17</ZIndex>
+                <Visibility>
+                  <ToggleItem>view_details</ToggleItem>
+                  <Hidden>true</Hidden>
+                </Visibility>
+                <Width>16in</Width>
+                <Details>
+                  <TableRows>
+                    <TableRow>
+                      <TableCells>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox6">
+                              <ZIndex>31</ZIndex>
+                              <Action>
+                                <Drillthrough>
+                                  <ReportName>session_details</ReportName>
+                                  <Parameters>
+                                    <Parameter Name="version_string">
+                                      <Value>=Parameters!version_string.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="session_id">
+                                      <Value>=Fields!session_id.Value</Value>
+                                    </Parameter>
+                                  </Parameters>
+                                </Drillthrough>
+                              </Action>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>=((Fields!tree_level.Value * 10) + 2).ToString() &amp; "pt"</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <Color>Blue</Color>
+                                <TextDecoration>Underline</TextDecoration>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!session_id.Value &amp; IIf(Fields!request_id.Value is Nothing, "", ":" &amp; Fields!request_id.Value)</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox11">
+                              <ZIndex>30</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!session_or_request_status.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="transaction_name">
+                              <rd:DefaultName>transaction_name</rd:DefaultName>
+                              <ZIndex>29</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!transaction_name.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox43">
+                              <rd:DefaultName>textbox43</rd:DefaultName>
+                              <ZIndex>28</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Switch(Fields!transaction_isolation_level.Value = 0, "Read Committed", 
+	Fields!transaction_isolation_level.Value = 1, "Read Uncommitted", 
+	Fields!transaction_isolation_level.Value = 2, "Read Committed", 
+	Fields!transaction_isolation_level.Value = 3, "Repeatable Read", 
+	Fields!transaction_isolation_level.Value = 4, "Serializable", 
+	Fields!transaction_isolation_level.Value = 5, "Snapshot", 
+	true, Fields!transaction_isolation_level.Value.ToString())</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox13">
+                              <ZIndex>27</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!wait_type.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox21">
+                              <ZIndex>26</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Right</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!wait_time.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ColSpan>3</ColSpan>
+                          <ReportItems>
+                            <Textbox Name="textbox22">
+                              <ZIndex>25</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!wait_resource.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ColSpan>3</ColSpan>
+                          <ReportItems>
+                            <Textbox Name="textbox15">
+                              <ZIndex>24</ZIndex>
+                              <Action>
+                                <Drillthrough>
+                                  <ReportName>query_plan</ReportName>
+                                  <Parameters>
+                                    <Parameter Name="version_string">
+                                      <Value>=Parameters!version_string.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="plan_handle">
+                                      <Value>=Fields!plan_handle.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="sql_handle">
+                                      <Value>=Fields!sql_handle.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="stmt_start_offset">
+                                      <Value>=Fields!statement_start_offset.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="stmt_end_offset">
+                                      <Value>=Fields!statement_end_offset.Value</Value>
+                                    </Parameter>
+                                  </Parameters>
+                                </Drillthrough>
+                              </Action>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <Color>Blue</Color>
+                                <TextDecoration>Underline</TextDecoration>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!query_text.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                      </TableCells>
+                      <Height>0.2in</Height>
+                    </TableRow>
+                    <TableRow>
+                      <TableCells>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox10">
+                              <rd:DefaultName>textbox10</rd:DefaultName>
+                              <ZIndex>23</ZIndex>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <Color>Blue</Color>
+                                <TextDecoration>Underline</TextDecoration>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value />
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox9">
+                              <rd:DefaultName>textbox9</rd:DefaultName>
+                              <ZIndex>22</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Transaction ID</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox30">
+                              <rd:DefaultName>textbox30</rd:DefaultName>
+                              <ZIndex>21</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Transaction Begin Time</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox48">
+                              <ZIndex>20</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Transaction State</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox14">
+                              <rd:DefaultName>textbox14</rd:DefaultName>
+                              <ZIndex>19</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Transaction Type</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox52">
+                              <ZIndex>18</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Enlist Count</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox57">
+                              <ZIndex>17</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>User Transaction</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox58">
+                              <ZIndex>16</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Local</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox59">
+                              <ZIndex>15</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Enlisted</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox60">
+                              <ZIndex>14</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Bound</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox62">
+                              <ZIndex>13</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>DTC State</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox61">
+                              <ZIndex>12</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>DTC Isolation Level</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                      </TableCells>
+                      <Height>0.375in</Height>
+                      <Visibility>
+                        <ToggleItem>transaction_name</ToggleItem>
+                        <Hidden>true</Hidden>
+                      </Visibility>
+                    </TableRow>
+                    <TableRow>
+                      <TableCells>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox27">
+                              <rd:DefaultName>textbox27</rd:DefaultName>
+                              <ZIndex>11</ZIndex>
+                              <Style>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <Color>Blue</Color>
+                                <TextDecoration>Underline</TextDecoration>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value />
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="transaction_id">
+                              <rd:DefaultName>transaction_id</rd:DefaultName>
+                              <ZIndex>10</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!transaction_id.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="transaction_begin_time">
+                              <rd:DefaultName>transaction_begin_time</rd:DefaultName>
+                              <ZIndex>9</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!transaction_begin_time.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="transaction_state">
+                              <rd:DefaultName>transaction_state</rd:DefaultName>
+                              <ZIndex>8</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Switch(Fields!transaction_state.Value = 0, "Initializing",
+Fields!transaction_state.Value = 1, "Initialized",
+Fields!transaction_state.Value = 2, "Active",
+Fields!transaction_state.Value = 3, "Ended",
+Fields!transaction_state.Value = 4, "Preparing",
+Fields!transaction_state.Value = 5, "Prepared",
+Fields!transaction_state.Value = 6, "Committed",
+Fields!transaction_state.Value = 7, "Rolling back",
+Fields!transaction_state.Value = 8, "Rolled back",
+true, Fields!transaction_state.Value.ToString())</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="transaction_type">
+                              <rd:DefaultName>transaction_type</rd:DefaultName>
+                              <ZIndex>7</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Switch(Fields!transaction_type.Value = 1, "Read/Write",
+Fields!transaction_type.Value = 2, "Read only",
+Fields!transaction_type.Value = 3, "System",
+Fields!transaction_type.Value = 4, "Distributed",
+true, Fields!transaction_type.Value.ToString())</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="enlist_count">
+                              <rd:DefaultName>enlist_count</rd:DefaultName>
+                              <ZIndex>6</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!enlist_count.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="is_user_transaction">
+                              <rd:DefaultName>is_user_transaction</rd:DefaultName>
+                              <ZIndex>5</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!is_user_transaction.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="is_local">
+                              <rd:DefaultName>is_local</rd:DefaultName>
+                              <ZIndex>4</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!is_local.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="is_enlisted">
+                              <rd:DefaultName>is_enlisted</rd:DefaultName>
+                              <ZIndex>3</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!is_enlisted.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="is_bound">
+                              <rd:DefaultName>is_bound</rd:DefaultName>
+                              <ZIndex>2</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!is_bound.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="dtc_state_1">
+                              <rd:DefaultName>dtc_state_1</rd:DefaultName>
+                              <ZIndex>1</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Switch(Fields!dtc_state.Value = 1, "Active",
+Fields!dtc_state.Value = 2, "Prepared",
+Fields!dtc_state.Value = 3, "Committed",
+Fields!dtc_state.Value = 4, "Aborted",
+Fields!dtc_state.Value = 5, "Recovered",
+true, Fields!dtc_state.Value.ToString())</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="dtc_isolation_level">
+                              <rd:DefaultName>dtc_isolation_level</rd:DefaultName>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <BorderColor>
+                                  <Default>Gainsboro</Default>
+                                </BorderColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>=Fields!dtc_isolation_level.Value</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                      </TableCells>
+                      <Height>0.2in</Height>
+                      <Visibility>
+                        <ToggleItem>transaction_name</ToggleItem>
+                        <Hidden>true</Hidden>
+                      </Visibility>
+                    </TableRow>
+                  </TableRows>
+                </Details>
+                <Header>
+                  <TableRows>
+                    <TableRow>
+                      <TableCells>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox29">
+                              <ZIndex>39</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Session ID: Request ID</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox36">
+                              <ZIndex>38</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Status</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox26">
+                              <rd:DefaultName>textbox26</rd:DefaultName>
+                              <ZIndex>37</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Transaction Name</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox34">
+                              <rd:DefaultName>textbox34</rd:DefaultName>
+                              <ZIndex>36</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Isolation Level</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox37">
+                              <ZIndex>35</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Wait Type</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ReportItems>
+                            <Textbox Name="textbox38">
+                              <ZIndex>34</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Wait Time (ms)</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ColSpan>3</ColSpan>
+                          <ReportItems>
+                            <Textbox Name="textbox39">
+                              <ZIndex>33</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Wait Resource</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                        <TableCell>
+                          <ColSpan>3</ColSpan>
+                          <ReportItems>
+                            <Textbox Name="textbox35">
+                              <ZIndex>32</ZIndex>
+                              <Style>
+                                <BorderStyle>
+                                  <Default>Solid</Default>
+                                </BorderStyle>
+                                <TextAlign>Left</TextAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingBottom>2pt</PaddingBottom>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontWeight>700</FontWeight>
+                                <FontSize>8pt</FontSize>
+                                <BackgroundColor>Gainsboro</BackgroundColor>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                              </Style>
+                              <CanGrow>true</CanGrow>
+                              <Value>Query Text</Value>
+                            </Textbox>
+                          </ReportItems>
+                        </TableCell>
+                      </TableCells>
+                      <Height>0.375in</Height>
+                    </TableRow>
+                  </TableRows>
+                </Header>
+                <TableColumns>
+                  <TableColumn>
+                    <Width>1in</Width>
+                  </TableColumn>
+                  <TableColumn>
+                    <Width>1.125in</Width>
+                  </TableColumn>
+                  <TableColumn>
+                    <Width>1.625in</Width>
+                  </TableColumn>
+                  <TableColumn>
+                    <Width>1.25in</Width>
+                  </TableColumn>
+                  <TableColumn>
+                    <Width>1.5in</Width>
+                  </TableColumn>
+                  <TableColumn>
+                    <Width>1.125in</Width>
+                  </TableColumn>
+                  <TableColumn>
+                    <Width>1in</Width>
+                  </TableColumn>
+                  <TableColumn>
+                    <Width>0.875in</Width>
+                  </TableColumn>
+                  <TableColumn>
+                    <Width>0.875in</Width>
+                  </TableColumn>
+                  <TableColumn>
+                    <Width>1in</Width>
+                  </TableColumn>
+                  <TableColumn>
+                    <Width>1.125in</Width>
+                  </TableColumn>
+                  <TableColumn>
+                    <Width>3.5in</Width>
+                  </TableColumn>
+                </TableColumns>
+                <Height>1.15in</Height>
+              </Table>
+              <Rectangle Name="rectangle4">
+                <ReportItems>
+                  <Textbox Name="textbox33">
+                    <Left>0.5in</Left>
+                    <ZIndex>1</ZIndex>
+                    <Width>7.25in</Width>
+                    <Style>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingBottom>2pt</PaddingBottom>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                    </Style>
+                    <CanGrow>true</CanGrow>
+                    <Height>0.25in</Height>
+                    <Value>="The current query for Session ID " &amp; Fields!session_id.Value &amp; " has been running for " &amp; Fields!seconds_active_idle.Value &amp; " seconds.  Check whether the query is using an efficient query plan or whether the operation can be split into smaller transactions.  The READ_COMMITTED_SNAPSHOT database option may be enabled to eliminate blocking for sessions using read committed transaction isolation level that are performing read only operations."</Value>
+                  </Textbox>
+                  <Image Name="image2">
+                    <Sizing>AutoSize</Sizing>
+                    <Width>0.33333in</Width>
+                    <Source>Embedded</Source>
+                    <Style />
+                    <Height>0.33333in</Height>
+                    <Value>warning_1</Value>
+                  </Image>
+                </ReportItems>
+                <Top>1.375in</Top>
+                <ZIndex>16</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Fields!session_or_request_status.Value &lt;&gt; "idle" and Fields!seconds_active_idle.Value &gt; 60, False, true)</Hidden>
+                </Visibility>
+                <Width>7.875in</Width>
+                <Height>0.375in</Height>
+              </Rectangle>
+              <Textbox Name="open_transaction_count">
+                <Left>1.375in</Left>
+                <Top>0.5in</Top>
+                <rd:DefaultName>open_transaction_count</rd:DefaultName>
+                <ZIndex>15</ZIndex>
+                <Width>2.625in</Width>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>=Fields!open_transaction_count.Value</Value>
+              </Textbox>
+              <Textbox Name="textbox17">
+                <Top>0.5in</Top>
+                <rd:DefaultName>textbox17</rd:DefaultName>
+                <ZIndex>14</ZIndex>
+                <Width>1.375in</Width>
+                <Style>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontWeight>700</FontWeight>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>Transaction Count</Value>
+              </Textbox>
+              <Rectangle Name="rectangle3">
+                <ReportItems>
+                  <Textbox Name="query_2">
+                    <Left>1.375in</Left>
+                    <rd:DefaultName>query_2</rd:DefaultName>
+                    <ZIndex>1</ZIndex>
+                    <Action>
+                      <Drillthrough>
+                        <ReportName>query_plan</ReportName>
+                        <Parameters>
+                          <Parameter Name="version_string">
+                            <Value>=Parameters!version_string.Value</Value>
+                          </Parameter>
+                          <Parameter Name="plan_handle">
+                            <Value>=Fields!plan_handle.Value</Value>
+                          </Parameter>
+                          <Parameter Name="sql_handle">
+                            <Value>=Fields!sql_handle.Value</Value>
+                          </Parameter>
+                          <Parameter Name="stmt_start_offset">
+                            <Value>=Fields!statement_start_offset.Value</Value>
+                          </Parameter>
+                          <Parameter Name="stmt_end_offset">
+                            <Value>=Fields!statement_end_offset.Value</Value>
+                          </Parameter>
+                        </Parameters>
+                      </Drillthrough>
+                    </Action>
+                    <Width>6.375in</Width>
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingBottom>2pt</PaddingBottom>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <Color>Blue</Color>
+                      <TextDecoration>Underline</TextDecoration>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                    </Style>
+                    <CanGrow>true</CanGrow>
+                    <Value>=First(Fields!query_text.Value)</Value>
+                  </Textbox>
+                  <Textbox Name="textbox31">
+                    <rd:DefaultName>textbox31</rd:DefaultName>
+                    <Width>1.375in</Width>
+                    <Style>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingBottom>2pt</PaddingBottom>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontWeight>700</FontWeight>
+                      <FontSize>8pt</FontSize>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                    </Style>
+                    <CanGrow>true</CanGrow>
+                    <Value>Query Text</Value>
+                  </Textbox>
+                </ReportItems>
+                <Top>0.75in</Top>
+                <ZIndex>13</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(First(Fields!query_text.Value) is Nothing, true, false)</Hidden>
+                </Visibility>
+                <Width>7.875in</Width>
+                <Height>0.25in</Height>
+              </Rectangle>
+              <Rectangle Name="rectangle2">
+                <ReportItems>
+                  <Textbox Name="textbox16">
+                    <Left>0.5in</Left>
+                    <rd:DefaultName>textbox16</rd:DefaultName>
+                    <ZIndex>1</ZIndex>
+                    <Width>7.25in</Width>
+                    <Style>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingBottom>2pt</PaddingBottom>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                    </Style>
+                    <CanGrow>true</CanGrow>
+                    <Height>0.25in</Height>
+                    <Value>="Session ID " &amp; Fields!session_id.Value &amp; " has not submitted any requests to the server in the last " &amp; Fields!seconds_active_idle.Value &amp; " seconds.  It is the responsibility of the client application to commit or rollback the transaction in a timely fashion.  Check whether the application has lost track of the open transaction count."</Value>
+                  </Textbox>
+                  <Image Name="image1">
+                    <Sizing>AutoSize</Sizing>
+                    <Width>0.33333in</Width>
+                    <Source>Embedded</Source>
+                    <Style />
+                    <Height>0.33333in</Height>
+                    <Value>warning_1</Value>
+                  </Image>
+                </ReportItems>
+                <Top>1in</Top>
+                <ZIndex>12</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Fields!session_or_request_status.Value = "idle" and Fields!seconds_active_idle.Value &gt; 15, False, true)</Hidden>
+                </Visibility>
+                <Width>7.875in</Width>
+                <Height>0.375in</Height>
+              </Rectangle>
+              <Line Name="line1">
+                <Top>3.375in</Top>
+                <ZIndex>11</ZIndex>
+                <Width>15.375in</Width>
+                <Style>
+                  <BorderStyle>
+                    <Default>Solid</Default>
+                  </BorderStyle>
+                  <BorderWidth>
+                    <Default>2pt</Default>
+                  </BorderWidth>
+                  <BorderColor>
+                    <Default>Gray</Default>
+                  </BorderColor>
+                </Style>
+                <Height>0in</Height>
+              </Line>
+              <Textbox Name="textbox8">
+                <Top>0.25in</Top>
+                <rd:DefaultName>textbox8</rd:DefaultName>
+                <ZIndex>10</ZIndex>
+                <Width>1.375in</Width>
+                <Style>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontWeight>700</FontWeight>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>Program Name</Value>
+              </Textbox>
+              <Textbox Name="program_name">
+                <Left>1.375in</Left>
+                <Top>0.25in</Top>
+                <rd:DefaultName>program_name</rd:DefaultName>
+                <ZIndex>9</ZIndex>
+                <Width>2.625in</Width>
+                <Style>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>=Fields!program_name.Value</Value>
+              </Textbox>
+              <Textbox Name="textbox7">
+                <Left>4.125in</Left>
+                <Top>0.5in</Top>
+                <rd:DefaultName>textbox7</rd:DefaultName>
+                <ZIndex>8</ZIndex>
+                <Width>1.375in</Width>
+                <Style>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontWeight>700</FontWeight>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>Wait Resource</Value>
+              </Textbox>
+              <Textbox Name="session_id_1">
+                <Left>1.375in</Left>
+                <rd:DefaultName>session_id_1</rd:DefaultName>
+                <ZIndex>7</ZIndex>
+                <Width>2.625in</Width>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>=Fields!session_id.Value</Value>
+              </Textbox>
+              <Textbox Name="head_wait_resource">
+                <Left>5.5in</Left>
+                <Top>0.5in</Top>
+                <rd:DefaultName>head_wait_resource</rd:DefaultName>
+                <ZIndex>6</ZIndex>
+                <Width>2.375in</Width>
+                <Style>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>=Fields!head_wait_resource.Value</Value>
+              </Textbox>
+              <Textbox Name="textbox2">
+                <ZIndex>5</ZIndex>
+                <Width>1.375in</Width>
+                <Style>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontWeight>700</FontWeight>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>Head Blocker</Value>
+              </Textbox>
+              <Textbox Name="textbox3">
+                <Left>4.125in</Left>
+                <Top>0.25in</Top>
+                <ZIndex>4</ZIndex>
+                <Width>1.375in</Width>
+                <Style>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontWeight>700</FontWeight>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>Wait Time</Value>
+              </Textbox>
+              <Textbox Name="textbox4">
+                <Left>4.125in</Left>
+                <ZIndex>3</ZIndex>
+                <Width>1.375in</Width>
+                <Style>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontWeight>700</FontWeight>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>Blocked Sessions</Value>
+              </Textbox>
+              <Textbox Name="textbox41">
+                <Left>5.5in</Left>
+                <ZIndex>2</ZIndex>
+                <Width>1in</Width>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>=Count(Fields!session_id.Value) - 1</Value>
+              </Textbox>
+              <Textbox Name="textbox42">
+                <Left>5.5in</Left>
+                <Top>0.25in</Top>
+                <ZIndex>1</ZIndex>
+                <Width>2.375in</Width>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>=Sum(Fields!wait_time.Value) &amp; " ms"</Value>
+              </Textbox>
+              <Textbox Name="view_details">
+                <Top>1.875in</Top>
+                <Width>2in</Width>
+                <Style>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingBottom>2pt</PaddingBottom>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>8pt</FontSize>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                </Style>
+                <CanGrow>true</CanGrow>
+                <Height>0.25in</Height>
+                <Value>Blocking Chain...</Value>
+              </Textbox>
+            </ReportItems>
+            <Width>16.125in</Width>
+          </Rectangle>
+        </ReportItems>
+        <DataSetName>BLOCKING</DataSetName>
+        <Top>0.375in</Top>
+        <NoRows>There are no blocked sessions at the current time.</NoRows>
+        <Width>16.25in</Width>
+        <Grouping Name="head_wait_resource_group">
+          <GroupExpressions>
+            <GroupExpression>=Fields!head_wait_resource.Value</GroupExpression>
+          </GroupExpressions>
+        </Grouping>
+        <Height>3.5in</Height>
+      </List>
+    </ReportItems>
+    <Height>4in</Height>
+  </Body>
+  <PageHeader>
+    <ReportItems>
+      <Textbox Name="textbox5">
+        <Left>5in</Left>
+        <ZIndex>1</ZIndex>
+        <Width>3in</Width>
+        <Style>
+          <TextAlign>Right</TextAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingBottom>2pt</PaddingBottom>
+          <FontFamily>Tahoma</FontFamily>
+          <FontSize>8pt</FontSize>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Height>0.25in</Height>
+        <Value>="Report Time: " &amp; Globals!ExecutionTime</Value>
+      </Textbox>
+      <Textbox Name="textbox1">
+        <Left>0.125in</Left>
+        <rd:DefaultName>textbox1</rd:DefaultName>
+        <Width>3in</Width>
+        <Style>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingBottom>2pt</PaddingBottom>
+          <FontFamily>Tahoma</FontFamily>
+          <FontSize>16pt</FontSize>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Value>Blocking Report</Value>
+      </Textbox>
+    </ReportItems>
+    <Height>0.375in</Height>
+    <PrintOnLastPage>true</PrintOnLastPage>
+    <PrintOnFirstPage>true</PrintOnFirstPage>
+  </PageHeader>
+  <rd:ReportID>0f380713-c3a5-4ba1-8ccc-0591d94c0ef4</rd:ReportID>
+  <LeftMargin>1in</LeftMargin>
+  <EmbeddedImages>
+    <EmbeddedImage Name="warning_1">
+      <ImageData>/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAgACADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+sm6uWkvmiVsJEOoP8VXr26WztHmOMgYUep7V4f8ZLnXLHTdEOlX9zapJNL9o+zymNmfaGTJGDgAOf8AIr5zOpSxNalltKXK5u7fktl83+SN6UbJzZ6R4V1y7XX9Q8L6m5klto1ubG4bJee2JwQ5xgsjYUknLZBOSCT2FeV+
+JYr+w0rRfFCJ52r6KFmnAABmjKhZ06HGQSc445xXptneQahY297ayeZb3ESyxPgjcjDIODyOCOtellOMWMwkajd5L3Zeq6/NWfrfsRUhySsYesXQub8W6nMVv8z4PVvT/PvXI+M4bK80q0S+v7SzVb+GVXuZliVgG+dQSeSUL8d6h1vxVZ+GdVm0/VpjHcn95lkch1PRgccjr+II6g1x3inWPB/i1tPa/wBQdfsUjOqrGxWRWxuVhgHnaOQcjmvk44LH4jMViatOcVe91Fuy6evY9C9KNPli0/met5WcSQuAVk6A9D7fQ9Kx/hvdNo9/qXgyYnZaE3mnEj71s7fMvA/hc9SSTu9BXNQ/EXw7bwRQxXYCRIqJ8j8ADA7e1Uk8WWmsfEbwpPosRuryO6ZJWETYWKQbX9DwpZs9BjJ4zXdw3hMdhMTKnOlJQkndtNJNXaf6fMyxTpyhdSV0f//Z</ImageData>
+      <MIMEType>image/jpeg</MIMEType>
+    </EmbeddedImage>
+  </EmbeddedImages>
+  <DataSets>
+    <DataSet Name="CHECK_DEPENDENCIES">
+      <Query>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+        <CommandText>if not exists (select * from msdb.sys.objects o
+			join msdb.sys.schemas s on o.schema_id = s.schema_id 
+		where o.name = N'fn_QueryTextFromHandle' and s.name = N'MS_PerfDashboard')
+begin
+	RAISERROR('The stored procedures and functions required by the performance dashboard have not yet been installed.  A database administrator must run the SETUP.SQL script (supplied with the reports) on each SQL Server instance that will be monitored via the dashboard reports.', 18, 1)
+end
+
+exec msdb.MS_PerfDashboard.usp_CheckDependencies</CommandText>
+        <DataSourceName>DataSource1</DataSourceName>
+      </Query>
+      <Fields>
+        <Field Name="major_version">
+          <rd:TypeName>System.Byte</rd:TypeName>
+          <DataField>major_version</DataField>
+        </Field>
+        <Field Name="minor_version">
+          <rd:TypeName>System.Byte</rd:TypeName>
+          <DataField>minor_version</DataField>
+        </Field>
+        <Field Name="build_number">
+          <rd:TypeName>System.Int16</rd:TypeName>
+          <DataField>build_number</DataField>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="BLOCKING">
+      <Query>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+        <CommandText>with blocking_hierarchy (head_wait_resource, session_id, blocking_session_id, tree_level, request_id, transaction_id, 
+	status, sql_handle, plan_handle, statement_start_offset, statement_end_offset, wait_type, wait_time, wait_resource, 
+	program_name, seconds_active_idle, open_transaction_count, transaction_isolation_level) 
+as 
+(
+	select 
+		(select min(wait_resource) from sys.dm_exec_requests where blocking_session_id = s.session_id) as head_wait_resource, 
+		s.session_id, 
+		convert(smallint, NULL), 
+		convert(int, 0), 
+		r.request_id, 
+		coalesce(r.transaction_id, st.transaction_id), 
+		isnull(r.status, 'idle'), 
+		r.sql_handle, 
+		r.plan_handle, 
+		r.statement_start_offset, 
+		r.statement_end_offset, 
+		r.wait_type, 
+		r.wait_time, 
+		r.wait_resource, 
+		s.program_name,
+		case when r.request_id is null then datediff(ss, s.last_request_end_time, getdate()) else datediff(ss, r.start_time, getdate()) end,
+		convert(int, p.open_tran),
+		coalesce(r.transaction_isolation_level, s.transaction_isolation_level)
+	from sys.dm_exec_sessions s
+		join sys.sysprocesses p on s.session_id = p.spid
+		left join sys.dm_exec_requests r on s.session_id = r.session_id
+		left join sys.dm_tran_session_transactions st on s.session_id = st.session_id
+	where s.session_id in (select blocking_session_id from sys.dm_exec_requests) 
+		and isnull(r.blocking_session_id, 0) = 0
+
+	union all
+
+	select b.head_wait_resource, 
+		r.session_id, 
+		r.blocking_session_id, 
+		tree_level + 1, 
+		r.request_id, 
+		r.transaction_id, 
+		r.status, 
+		r.sql_handle, 
+		r.plan_handle, 
+		r.statement_start_offset, 
+		r.statement_end_offset, 
+		r.wait_type, 
+		r.wait_time, 
+		r.wait_resource, 
+		NULL,
+		NULL,
+		r.open_transaction_count,
+		r.transaction_isolation_level
+	from sys.dm_exec_requests r
+		join blocking_hierarchy b on r.blocking_session_id = b.session_id
+)
+select b.head_wait_resource,
+	b.session_id, 
+	b.request_id, 
+	b.blocking_session_id, 
+	b.program_name, 
+	b.tree_level, 
+	case when LEN(qt.query_text) &lt; 2048 then qt.query_text else LEFT(qt.query_text, 2048) + N'...' end as query_text,
+	master.dbo.fn_varbintohexstr(b.sql_handle) as sql_handle, 
+	master.dbo.fn_varbintohexstr(b.plan_handle) as plan_handle, 
+	b.statement_start_offset, 
+	b.statement_end_offset, 
+	b.status as session_or_request_status, 
+	b.wait_type, 
+	b.wait_time, 
+	b.wait_resource, 
+	b.transaction_id, 
+	b.transaction_isolation_level,
+	b.open_transaction_count,
+	b.seconds_active_idle,
+	t.name as transaction_name, 
+	t.transaction_begin_time, 
+	t.transaction_type, 
+	t.transaction_state, 
+	t.dtc_state, 
+	t.dtc_isolation_level,
+	st.enlist_count, 
+	st.is_user_transaction, 
+	st.is_local, 
+	st.is_enlisted, 
+	st.is_bound
+from blocking_hierarchy b
+	left join sys.dm_tran_session_transactions st on st.transaction_id = b.transaction_id and st.session_id = b.session_id
+	left join sys.dm_tran_active_transactions t on t.transaction_id = b.transaction_id
+	outer apply msdb.MS_PerfDashboard.fn_QueryTextFromHandle(b.sql_handle, b.statement_start_offset, b.statement_end_offset) as qt</CommandText>
+        <DataSourceName>DataSource1</DataSourceName>
+      </Query>
+      <Fields>
+        <Field Name="head_wait_resource">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>head_wait_resource</DataField>
+        </Field>
+        <Field Name="session_id">
+          <rd:TypeName>System.Int16</rd:TypeName>
+          <DataField>session_id</DataField>
+        </Field>
+        <Field Name="request_id">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>request_id</DataField>
+        </Field>
+        <Field Name="blocking_session_id">
+          <rd:TypeName>System.Int16</rd:TypeName>
+          <DataField>blocking_session_id</DataField>
+        </Field>
+        <Field Name="program_name">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>program_name</DataField>
+        </Field>
+        <Field Name="tree_level">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>tree_level</DataField>
+        </Field>
+        <Field Name="query_text">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>query_text</DataField>
+        </Field>
+        <Field Name="sql_handle">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>sql_handle</DataField>
+        </Field>
+        <Field Name="plan_handle">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>plan_handle</DataField>
+        </Field>
+        <Field Name="statement_start_offset">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>statement_start_offset</DataField>
+        </Field>
+        <Field Name="statement_end_offset">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>statement_end_offset</DataField>
+        </Field>
+        <Field Name="session_or_request_status">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>session_or_request_status</DataField>
+        </Field>
+        <Field Name="wait_type">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>wait_type</DataField>
+        </Field>
+        <Field Name="wait_time">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>wait_time</DataField>
+        </Field>
+        <Field Name="wait_resource">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>wait_resource</DataField>
+        </Field>
+        <Field Name="transaction_id">
+          <rd:TypeName>System.Int64</rd:TypeName>
+          <DataField>transaction_id</DataField>
+        </Field>
+        <Field Name="transaction_isolation_level">
+          <rd:TypeName>System.Int16</rd:TypeName>
+          <DataField>transaction_isolation_level</DataField>
+        </Field>
+        <Field Name="open_transaction_count">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>open_transaction_count</DataField>
+        </Field>
+        <Field Name="seconds_active_idle">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>seconds_active_idle</DataField>
+        </Field>
+        <Field Name="transaction_name">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>transaction_name</DataField>
+        </Field>
+        <Field Name="transaction_begin_time">
+          <rd:TypeName>System.DateTime</rd:TypeName>
+          <DataField>transaction_begin_time</DataField>
+        </Field>
+        <Field Name="transaction_type">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>transaction_type</DataField>
+        </Field>
+        <Field Name="transaction_state">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>transaction_state</DataField>
+        </Field>
+        <Field Name="dtc_state">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>dtc_state</DataField>
+        </Field>
+        <Field Name="dtc_isolation_level">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>dtc_isolation_level</DataField>
+        </Field>
+        <Field Name="enlist_count">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>enlist_count</DataField>
+        </Field>
+        <Field Name="is_user_transaction">
+          <rd:TypeName>System.Boolean</rd:TypeName>
+          <DataField>is_user_transaction</DataField>
+        </Field>
+        <Field Name="is_local">
+          <rd:TypeName>System.Boolean</rd:TypeName>
+          <DataField>is_local</DataField>
+        </Field>
+        <Field Name="is_enlisted">
+          <rd:TypeName>System.Boolean</rd:TypeName>
+          <DataField>is_enlisted</DataField>
+        </Field>
+        <Field Name="is_bound">
+          <rd:TypeName>System.Boolean</rd:TypeName>
+          <DataField>is_bound</DataField>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <Code>Public Shared Function FormatSessionRequest(ByRef SessionID, ByRef RequestID)
+    FormatSessionRequest = SessionID.Value &amp; IIf(RequestID.Value is Nothing, "", ":" &amp; RequestID.Value)
+End Function</Code>
+  <Width>16.5in</Width>
+  <InteractiveHeight>0in</InteractiveHeight>
+  <Language>en-US</Language>
+  <PageFooter>
+    <ReportItems>
+      <Textbox Name="textbox18">
+        <Left>4.875in</Left>
+        <ZIndex>1</ZIndex>
+        <Width>3.125in</Width>
+        <Style>
+          <TextAlign>Right</TextAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingBottom>2pt</PaddingBottom>
+          <FontFamily>Tahoma</FontFamily>
+          <FontSize>8pt</FontSize>
+          <Color>Gray</Color>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Value>="Dashboard Version: " + Parameters!version_string.Value</Value>
+      </Textbox>
+      <Textbox Name="textbox24">
+        <Left>0.125in</Left>
+        <rd:DefaultName>textbox24</rd:DefaultName>
+        <Width>4.125in</Width>
+        <Style>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingBottom>2pt</PaddingBottom>
+          <FontFamily>Tahoma</FontFamily>
+          <FontSize>8pt</FontSize>
+          <Color>Gray</Color>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Value>© 2006-2007 Microsoft Corporation. All rights reserved.</Value>
+      </Textbox>
+    </ReportItems>
+    <Height>0.25in</Height>
+    <PrintOnLastPage>true</PrintOnLastPage>
+    <PrintOnFirstPage>true</PrintOnFirstPage>
+  </PageFooter>
+  <TopMargin>1in</TopMargin>
+</Report>

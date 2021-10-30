@@ -1,0 +1,56 @@
+Copy the Powershell folder to c:\ and all its contents to a PC you can reach the server you intend to deploy to.
+Get the latest from Source Control.
+
+Example robocopy script you could create.
+	robocopy "\\someserver\dbops" C:\PowerShell\DBOPS\Code\dbops *.* /R:3 /W:3 /S /MIR
+
+Now you have the latest code to deploy.
+
+Run the ApplyDBOps.ps1 in a powershell window (hopefully you have configured it already with the remote signed security setting).
+Don't use IP addresses for server names, it doesn't work and I haven't figured out why. Create a SQL Alias to the server to get around this.
+If you have to use SQL Auth, modify the ApplyDBOPS.ps1 file and change the username and password values in the failure area.
+
+Example run:
+
+PS C:\powershell\dbops> .\ApplyDBOps.ps1 devbuildserver >DevbuildServerDbopsDeployment.txt
+
+Sample output:
+
+cmdlet ApplyDBOps.ps1 at command pipeline position 1
+Supply values for the following parameters:
+PartialCodePush:  <-Just hit enter, unless you want to push the code in PartialCodePush folder instead.
+ExcludeCodeExecution:  <-Enter true if you want deployment to run dbops.dbo.prc_dba_configuremail once deployment is completed to setup DBMail for you.
+Running object scripts
+
+...list of files.
+
+--The text output script will show the values from the dbops.dbo.processparameters table, 
+	for FYI as you may want to configure new default email addresses for SQL Agent Notification purposes.
+
+
+Now go and disable/delete any jobs you may not want.
+For Dev/UAT servers, disable these jobs:
+DBA: Monitor Server Activity
+DBA: Purge Server Monitoring Data
+DBA: Statistics Maintenance
+DBA: Weekly Maintenance
+
+
+Now, if you want to deploy to many servers a few scripts, run the CleanPartialCodePush.ps1 to clean out the folder, 
+	then put the scripts in the PartialCodePush folder in respective folder.
+Then populate a text file with all the servernames one per line and call the Run_ApplyMultiServer_Partial.ps1 
+	with Filename as the passed in first parameter. 
+
+--TROUBLESHOOTING--
+	
+--These errors are because SQL Agent isn't online, you can ignore:
+C:\Powershell\dbops\code\DBOps\Jobs\Job_DBA Cycle Errorlog.sql
+Invoke-Sqlcmd : The specified @server_name ('WIN7-BI') does not exist.
+At C:\powershell\dbops\ApplyDBOps.ps1:113 char:25
++                     else {Invoke-Sqlcmd <<<<  -ServerInstance $TargetServer -
+Database "DBOPS" -Inputfile $InstallFile}
+    + CategoryInfo          : InvalidOperation: (:) [Invoke-Sqlcmd], SqlPowerS
+   hellSqlExecutionException
+    + FullyQualifiedErrorId : SqlError,Microsoft.SqlServer.Management.PowerShe
+   ll.GetScriptCommand
+   

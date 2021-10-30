@@ -1,0 +1,544 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSources>
+    <DataSource Name="DataSource1">
+      <DataSourceReference>DataSource1</DataSourceReference>
+      <rd:DataSourceID>0fe5b394-e3b5-46fa-ac80-4f93f2919e16</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <BottomMargin>1in</BottomMargin>
+  <RightMargin>1in</RightMargin>
+  <ReportParameters>
+    <ReportParameter Name="plan_guide_name">
+      <DataType>String</DataType>
+      <Prompt>plan_guide_name</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="database_name">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>database_name</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="version_string">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Report_Parameter_2</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+  </ReportParameters>
+  <rd:DrawGrid>true</rd:DrawGrid>
+  <InteractiveWidth>8.5in</InteractiveWidth>
+  <rd:GridSpacing>0.1in</rd:GridSpacing>
+  <rd:SnapToGrid>true</rd:SnapToGrid>
+  <Body>
+    <ReportItems>
+      <Textbox Name="view_report_params">
+        <Left>0.2in</Left>
+        <Top>1.6in</Top>
+        <ZIndex>2</ZIndex>
+        <Width>2in</Width>
+        <Style>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingBottom>2pt</PaddingBottom>
+          <FontFamily>Tahoma</FontFamily>
+          <FontWeight>700</FontWeight>
+          <FontSize>8pt</FontSize>
+          <Color>Gray</Color>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Height>0.25in</Height>
+        <Value>Report Parameters</Value>
+      </Textbox>
+      <Rectangle Name="rectangle4">
+        <Left>0.2in</Left>
+        <ReportItems>
+          <Textbox Name="textbox15">
+            <Left>1.75in</Left>
+            <Top>0.25in</Top>
+            <ZIndex>3</ZIndex>
+            <Width>6in</Width>
+            <Style>
+              <TextAlign>Left</TextAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+              <Color>Gray</Color>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Value>=Parameters!plan_guide_name.Value</Value>
+          </Textbox>
+          <Textbox Name="textbox18">
+            <Left>0.125in</Left>
+            <Top>0.25in</Top>
+            <ZIndex>2</ZIndex>
+            <Width>1.625in</Width>
+            <Style>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+              <Color>Gray</Color>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Value>plan_guide_name</Value>
+          </Textbox>
+          <Textbox Name="textbox19">
+            <Left>1.75in</Left>
+            <ZIndex>1</ZIndex>
+            <Width>6in</Width>
+            <Style>
+              <TextAlign>Left</TextAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+              <Color>Gray</Color>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.25in</Height>
+            <Value>=Parameters!database_name.Value</Value>
+          </Textbox>
+          <Textbox Name="textbox20">
+            <Left>0.125in</Left>
+            <Width>1.625in</Width>
+            <Style>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+              <Color>Gray</Color>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.25in</Height>
+            <Value>database_name</Value>
+          </Textbox>
+        </ReportItems>
+        <Top>1.85in</Top>
+        <ZIndex>1</ZIndex>
+        <Visibility>
+          <ToggleItem>view_report_params</ToggleItem>
+          <Hidden>true</Hidden>
+        </Visibility>
+        <Width>7.875in</Width>
+        <Height>0.5in</Height>
+      </Rectangle>
+      <List Name="list1">
+        <Left>0.2in</Left>
+        <ReportItems>
+          <Textbox Name="textbox12">
+            <Left>1.5in</Left>
+            <ZIndex>11</ZIndex>
+            <Width>6.25in</Width>
+            <Style>
+              <TextAlign>Left</TextAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.2in</Height>
+            <Value>=Parameters!database_name.Value</Value>
+          </Textbox>
+          <Textbox Name="textbox11">
+            <Left>1.5in</Left>
+            <Top>0.2in</Top>
+            <ZIndex>10</ZIndex>
+            <Width>6.25in</Width>
+            <Style>
+              <TextAlign>Left</TextAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.2in</Height>
+            <Value>=Fields!name.Value</Value>
+          </Textbox>
+          <Textbox Name="textbox10">
+            <Left>1.5in</Left>
+            <Top>0.4in</Top>
+            <ZIndex>9</ZIndex>
+            <Width>6.25in</Width>
+            <Style>
+              <TextAlign>Left</TextAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.2in</Height>
+            <Value>=Fields!plan_guide_id.Value</Value>
+          </Textbox>
+          <Textbox Name="textbox9">
+            <Left>1.5in</Left>
+            <Top>0.6in</Top>
+            <ZIndex>8</ZIndex>
+            <Width>6.25in</Width>
+            <Style>
+              <TextAlign>Left</TextAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.2in</Height>
+            <Value>=Fields!create_date.Value</Value>
+          </Textbox>
+          <Textbox Name="textbox8">
+            <Left>1.5in</Left>
+            <Top>0.8in</Top>
+            <ZIndex>7</ZIndex>
+            <Width>6.25in</Width>
+            <Style>
+              <TextAlign>Left</TextAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.2in</Height>
+            <Value>=Fields!modify_date.Value</Value>
+          </Textbox>
+          <Textbox Name="textbox7">
+            <Top>0.8in</Top>
+            <rd:DefaultName>textbox7</rd:DefaultName>
+            <ZIndex>6</ZIndex>
+            <Width>1.5in</Width>
+            <Style>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontWeight>700</FontWeight>
+              <FontSize>8pt</FontSize>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.2in</Height>
+            <Value>Last Modified</Value>
+          </Textbox>
+          <Textbox Name="textbox6">
+            <Top>0.6in</Top>
+            <rd:DefaultName>textbox6</rd:DefaultName>
+            <ZIndex>5</ZIndex>
+            <Width>1.5in</Width>
+            <Style>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontWeight>700</FontWeight>
+              <FontSize>8pt</FontSize>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.2in</Height>
+            <Value>Created</Value>
+          </Textbox>
+          <Textbox Name="textbox5">
+            <Left>1.5in</Left>
+            <Top>1in</Top>
+            <rd:DefaultName>textbox5</rd:DefaultName>
+            <ZIndex>4</ZIndex>
+            <Width>6.25in</Width>
+            <Style>
+              <TextAlign>Left</TextAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.2in</Height>
+            <Value>=Fields!hints.Value</Value>
+          </Textbox>
+          <Textbox Name="textbox4">
+            <Top>1in</Top>
+            <rd:DefaultName>textbox4</rd:DefaultName>
+            <ZIndex>3</ZIndex>
+            <Width>1.5in</Width>
+            <Style>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontWeight>700</FontWeight>
+              <FontSize>8pt</FontSize>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.2in</Height>
+            <Value>Query Hints</Value>
+          </Textbox>
+          <Textbox Name="textbox3">
+            <Top>0.4in</Top>
+            <rd:DefaultName>textbox3</rd:DefaultName>
+            <ZIndex>2</ZIndex>
+            <Width>1.5in</Width>
+            <Style>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontWeight>700</FontWeight>
+              <FontSize>8pt</FontSize>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.2in</Height>
+            <Value>Plan Guide ID</Value>
+          </Textbox>
+          <Textbox Name="textbox2">
+            <Top>0.2in</Top>
+            <rd:DefaultName>textbox2</rd:DefaultName>
+            <ZIndex>1</ZIndex>
+            <Width>1.5in</Width>
+            <Style>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontWeight>700</FontWeight>
+              <FontSize>8pt</FontSize>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.2in</Height>
+            <Value>Plan Guide Name</Value>
+          </Textbox>
+          <Textbox Name="textbox1">
+            <rd:DefaultName>textbox1</rd:DefaultName>
+            <Width>1.5in</Width>
+            <Style>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingBottom>2pt</PaddingBottom>
+              <FontFamily>Tahoma</FontFamily>
+              <FontWeight>700</FontWeight>
+              <FontSize>8pt</FontSize>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+            </Style>
+            <CanGrow>true</CanGrow>
+            <Height>0.2in</Height>
+            <Value>Database</Value>
+          </Textbox>
+        </ReportItems>
+        <DataSetName>PLAN_GUIDE_DETAILS</DataSetName>
+        <Top>0.125in</Top>
+        <NoRows>No plan guide was found matching the specified criteria, or you do not have permissions to view it.</NoRows>
+        <Width>7.875in</Width>
+        <Height>1.275in</Height>
+      </List>
+    </ReportItems>
+    <Height>2.4in</Height>
+  </Body>
+  <PageHeader>
+    <ReportItems>
+      <Textbox Name="textbox17">
+        <Left>5in</Left>
+        <ZIndex>1</ZIndex>
+        <Width>3in</Width>
+        <Style>
+          <TextAlign>Right</TextAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingBottom>2pt</PaddingBottom>
+          <FontFamily>Tahoma</FontFamily>
+          <FontSize>8pt</FontSize>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Height>0.25in</Height>
+        <Value>="Report Time: " &amp; Globals!ExecutionTime</Value>
+      </Textbox>
+      <Textbox Name="textbox16">
+        <Left>0.2in</Left>
+        <rd:DefaultName>textbox16</rd:DefaultName>
+        <Width>3.375in</Width>
+        <Style>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingBottom>2pt</PaddingBottom>
+          <FontFamily>Tahoma</FontFamily>
+          <FontSize>16pt</FontSize>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Value>Plan Guide</Value>
+      </Textbox>
+    </ReportItems>
+    <Height>0.375in</Height>
+    <PrintOnLastPage>true</PrintOnLastPage>
+    <PrintOnFirstPage>true</PrintOnFirstPage>
+  </PageHeader>
+  <rd:ReportID>816fee45-4707-4f49-9b5d-cae9bce163ec</rd:ReportID>
+  <LeftMargin>1in</LeftMargin>
+  <DataSets>
+    <DataSet Name="CHECK_DEPENDENCIES">
+      <Query>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+        <CommandText>if not exists (select * from msdb.sys.objects o
+			join msdb.sys.schemas s on o.schema_id = s.schema_id 
+		where o.name = N'fn_QueryTextFromHandle' and s.name = N'MS_PerfDashboard')
+begin
+	RAISERROR('The stored procedures and functions required by the performance dashboard have not yet been installed.  A database administrator must run the SETUP.SQL script (supplied with the reports) on each SQL Server instance that will be monitored via the dashboard reports.', 18, 1)
+end
+
+exec msdb.MS_PerfDashboard.usp_CheckDependencies</CommandText>
+        <DataSourceName>DataSource1</DataSourceName>
+      </Query>
+      <Fields>
+        <Field Name="major_version">
+          <rd:TypeName>System.Byte</rd:TypeName>
+          <DataField>major_version</DataField>
+        </Field>
+        <Field Name="minor_version">
+          <rd:TypeName>System.Byte</rd:TypeName>
+          <DataField>minor_version</DataField>
+        </Field>
+        <Field Name="build_number">
+          <rd:TypeName>System.Int16</rd:TypeName>
+          <DataField>build_number</DataField>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="PLAN_GUIDE_DETAILS">
+      <Query>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>msdb.MS_PerfDashboard.usp_GetPlanGuideDetails</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@database_name">
+            <Value>=Parameters!database_name.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@plan_guide_name">
+            <Value>=Parameters!plan_guide_name.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <DataSourceName>DataSource1</DataSourceName>
+      </Query>
+      <Fields>
+        <Field Name="plan_guide_id">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>plan_guide_id</DataField>
+        </Field>
+        <Field Name="name">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>name</DataField>
+        </Field>
+        <Field Name="create_date">
+          <rd:TypeName>System.DateTime</rd:TypeName>
+          <DataField>create_date</DataField>
+        </Field>
+        <Field Name="modify_date">
+          <rd:TypeName>System.DateTime</rd:TypeName>
+          <DataField>modify_date</DataField>
+        </Field>
+        <Field Name="is_disabled">
+          <rd:TypeName>System.Boolean</rd:TypeName>
+          <DataField>is_disabled</DataField>
+        </Field>
+        <Field Name="query_text">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>query_text</DataField>
+        </Field>
+        <Field Name="scope_type">
+          <rd:TypeName>System.Byte</rd:TypeName>
+          <DataField>scope_type</DataField>
+        </Field>
+        <Field Name="scope_type_desc">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>scope_type_desc</DataField>
+        </Field>
+        <Field Name="scope_object_id">
+          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>scope_object_id</DataField>
+        </Field>
+        <Field Name="scope_batch">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>scope_batch</DataField>
+        </Field>
+        <Field Name="parameters">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>parameters</DataField>
+        </Field>
+        <Field Name="hints">
+          <rd:TypeName>System.String</rd:TypeName>
+          <DataField>hints</DataField>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <Code />
+  <Width>8.175in</Width>
+  <InteractiveHeight>0in</InteractiveHeight>
+  <Language>en-US</Language>
+  <PageFooter>
+    <ReportItems>
+      <Textbox Name="textbox13">
+        <Left>4.875in</Left>
+        <ZIndex>1</ZIndex>
+        <Width>3.125in</Width>
+        <Style>
+          <TextAlign>Right</TextAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingBottom>2pt</PaddingBottom>
+          <FontFamily>Tahoma</FontFamily>
+          <FontSize>8pt</FontSize>
+          <Color>Gray</Color>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Value>="Dashboard Version: " + Parameters!version_string.Value</Value>
+      </Textbox>
+      <Textbox Name="textbox24">
+        <Left>0.125in</Left>
+        <rd:DefaultName>textbox24</rd:DefaultName>
+        <Width>4.125in</Width>
+        <Style>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingBottom>2pt</PaddingBottom>
+          <FontFamily>Tahoma</FontFamily>
+          <FontSize>8pt</FontSize>
+          <Color>Gray</Color>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Value>© 2006-2007 Microsoft Corporation. All rights reserved.</Value>
+      </Textbox>
+    </ReportItems>
+    <Height>0.25in</Height>
+    <PrintOnLastPage>true</PrintOnLastPage>
+    <PrintOnFirstPage>true</PrintOnFirstPage>
+  </PageFooter>
+  <TopMargin>1in</TopMargin>
+</Report>
