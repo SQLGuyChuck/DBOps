@@ -25,7 +25,7 @@ as
 --   August 2008: Fixed a bug (missing begin/end block) AND I found
 --                a few other issues that people hadn't noticed (yikes!)!
 --    April 2008: Updated to add included columns to the output. 
-
+--  Written by Kimberly L. Tripp, SYSolutions, Inc.
 
 -- See my blog for updates and/or additional information
 -- http://www.SQLskills.com/blogs/Kimberly (Kimberly L. Tripp)

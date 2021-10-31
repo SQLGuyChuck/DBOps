@@ -1,3 +1,6 @@
+Summary
+If you use the KISS (Keep it Simple Stupid) process, you should be able to do a code deployment process with just git and some conventions with dev and DBA team. No fancy expensive tools needed. Although a good comparison tool does come in handy. On the cheap, you can script everything out with supplied ScriptDBObjects.ps1 and compare with Winmerge from winmerge.org. It has folder and file comparison capabilities.
+
 Copy the Powershell folder to c:\ and all its contents to a PC you can reach the server you intend to deploy to.
 Get the latest from Source Control.
 

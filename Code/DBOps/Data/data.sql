@@ -1,5 +1,25 @@
-USE DBOPS
+--Update database to the database you use for DB Operations code, USE CTRL-SHIFT-M in SSMS to fill in template.
+USE <DBOps Database Name,String, DBOps>
 GO
+
+--Update this distribution list to alert DB folks you want alerted.
+DECLARE @DatabaseTeamDLToAlert varchar(100) = '<Email without domain for DB Team Alerts,String,DatabaseAlerts>@<Email Domain Name,String, YourDomainName.com>'
+
+--What is DB team name for above alert email
+DECLARE @DBTeamName nvarchar(50) = '<DBOps Team Name,String, DBOps>'
+
+--Update this distribution list to alert DB and Dev folks you want alerted.
+DECLARE @DBandDevTeamDLToAlert varchar(100) = '<Email without domain for DB & Dev Team Alerts,String,Alerts>@<Email Domain Name,String, YourDomainName.com>'
+
+--What is Dev and DB team name you want above alert email
+DECLARE @DBandDevTeamName nvarchar(60) = @DBTeamName + ' & Dev'
+
+--Update this distribution list to alert Dev folks you want alerted.
+DECLARE @DevTeamDLToAlert varchar(100) = '<Email without domain for Dev Team Alerts,String,Alerts>@<Email Domain Name,String, YourDomainName.com>'
+
+--What is Dev and DB team name you want above alert email
+DECLARE @DevTeamName nvarchar(50) = '<Dev Team Name,String, Dev>'
+
 
 IF NOT EXISTS (Select * from Processes where ProcessName = 'Admin')
 	Insert into Processes (ProcessID,ProcessName,ProcessStatus) Values (1,'Admin',1)
@@ -7,71 +27,24 @@ IF NOT EXISTS (Select * from Processes where ProcessName = 'Admin')
 IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'Environment')
 BEGIN
 	Insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	Select Processid, 'Environment', CASE WHEN @@SERVERNAME like '%stag%' Then 'QA'
-											WHEN @@SERVERNAME like '%dev%' or @@SERVERNAME like '%HQ%' THEN 'Dev'
+	Select Processid, 'Environment', CASE WHEN @@SERVERNAME like '%<ServerName String used in staging servers,String, STG>%' Then 'QA'
+											WHEN @@SERVERNAME like '%<ServerName String1 used in dev servers,String, dev>%' or @@SERVERNAME like '%<ServerName String2 used in dev servers,String, HQ>%' THEN 'Dev'
 											Else 'Production' 
 									 END
-	from Processes
-	Where ProcessName = 'Admin'
-END
-
-IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'Blocking Threshold (ms)')
-BEGIN
-	insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	Select ProcessID, 'Blocking Threshold (ms)','5000'
 	From Processes
 	Where ProcessName = 'Admin'
 END
 
-IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'Job Run Default Threshold (min)')
-BEGIN
-	insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	Select ProcessID, 'Job Run Default Threshold (min)','60'
-	From Processes
-	Where ProcessName = 'Admin'
-END
-
-IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'Query Run Default Threshold (min)')
-BEGIN
-	insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	Select ProcessID, 'Query Run Default Threshold (min)','15'
-	From Processes
-	Where ProcessName = 'Admin'
-END
-
---For procs that need to email, store the operators in the processparameter table
-IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'IT Ops Team Escalation')
-BEGIN
-	Insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	SELECT ProcessID,'IT Ops Team Escalation','databasealerts@YourDomainName.com'
-	From Processes
-	Where ProcessName = 'Admin'
-END
-
-IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'IT Ops & Dev Team Escalation')
-BEGIN
-	Insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	SELECT ProcessID,'IT Ops & Dev Team Escalation','alerts@YourDomainName.com'
-	From Processes
-	Where ProcessName = 'Admin'
-END
-
-IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'Dev Team Escalation')
-BEGIN
-	Insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	SELECT ProcessID,'Dev Team Escalation','alerts@YourDomainName.com'
-	From Processes
-	Where ProcessName = 'Admin'
-END
-
+--Update the mail server info:
 IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'SMTPServerName')
 BEGIN
 	Insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	SELECT ProcessID,'SMTPServerName','mail'
+	SELECT ProcessID,'SMTPServerName','mail.yourdomainname.com'
 	From Processes
 	Where ProcessName = 'Admin'
 END
 
+--Update the mail server info:
 IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'SMTPServerPort')
 BEGIN
 	Insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
@@ -80,58 +53,56 @@ BEGIN
 	Where ProcessName = 'Admin'
 END
 
-IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'IT Ops Team Escalation LastKnown')
+
+IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'Blocking Threshold (ms)')
 BEGIN
 	Insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	SELECT ProcessID,'IT Ops Team Escalation LastKnown','databasealerts@YourDomainName.com'
+	Select ProcessID, 'Blocking Threshold (ms)','5000'
 	From Processes
 	Where ProcessName = 'Admin'
 END
 
-IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'IT Ops and Dev Team Escalation LastKnown')
+IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'Job Run Default Threshold (min)')
 BEGIN
 	Insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	SELECT ProcessID,'IT Ops and Dev Team Escalation LastKnown','databasealerts@YourDomainName.com'
+	Select ProcessID, 'Job Run Default Threshold (min)','60'
 	From Processes
 	Where ProcessName = 'Admin'
 END
 
-
-IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'Dev Team Escalation LastKnown')
+IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'Query Run Default Threshold (min)')
 BEGIN
 	Insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	SELECT ProcessID,'Dev Team Escalation LastKnown','databasealerts@YourDomainName.com'
+	Select ProcessID, 'Query Run Default Threshold (min)','15'
 	From Processes
 	Where ProcessName = 'Admin'
 END
 
-
-
-IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'IT Ops Team Operator LastKnown')
+--For procs that need to email, store the operators in the processparameter table
+IF NOT EXISTS (Select * from ProcessParameter where ParameterName = @DBTeamName+' Team Escalation')
 BEGIN
 	Insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	SELECT ProcessID,'IT Ops Team Operator LastKnown','databasealerts@YourDomainName.com'
+	SELECT ProcessID,@DBTeamName+' Team Escalation',@DatabaseTeamDLToAlert
 	From Processes
 	Where ProcessName = 'Admin'
 END
 
-IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'IT Ops and Dev Team Operator LastKnown')
+IF NOT EXISTS (Select * from ProcessParameter where ParameterName = @DBandDevTeamName+' Team Escalation')
 BEGIN
 	Insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	SELECT ProcessID,'IT Ops and Dev Team Operator LastKnown','databasealerts@YourDomainName.com'
+	SELECT ProcessID,@DBandDevTeamName+' Team Escalation',@DBandDevTeamDLToAlert
 	From Processes
 	Where ProcessName = 'Admin'
 END
 
-IF NOT EXISTS (Select * from ProcessParameter where ParameterName = 'Dev Team Operator LastKnown')
+IF NOT EXISTS (Select * from ProcessParameter where ParameterName = @DevTeamName+' Team Escalation')
 BEGIN
 	Insert into ProcessParameter (ProcessID,ParameterName,ParameterValue)
-	SELECT ProcessID,'Dev Team Operator LastKnown','databasealerts@YourDomainName.com'
+	SELECT ProcessID,@DevTeamName+' Team Escalation',@DevTeamDLToAlert
 	From Processes
 	Where ProcessName = 'Admin'
 END
 
---Add username and password as needed for SMTP info for prc_internalsendmail if default profile doesn't exist
 
 --See Admin values:
 Select p.ProcessName, pp.* from Processes p
@@ -139,57 +110,30 @@ join ProcessParameter pp on pp.ProcessID = p.ProcessID
 where ProcessName = 'Admin'
 
 
-USE [msdb]
-GO
-DECLARE @ITOps varchar(200),
-		@DevTeam varchar(200),
-		@ITOpsandDevTeam varchar(400)
-
+--MSDB Job Operator Setup
 --Create operators if they don't exist
-IF NOT EXISTS (select * from msdb.dbo.sysoperators Where name = 'IT Ops')
+IF NOT EXISTS (select * from msdb.dbo.sysoperators Where name = @DBTeamName)
 BEGIN
-	SELECT @ITOps = ParameterValue
-	From ProcessParameter
-	Where ParameterName = 'IT Ops Team Escalation'
-
-	IF @ITOps IS NOT NULL
-		EXEC msdb.dbo.sp_add_operator @name=N'IT Ops', 
+	EXEC msdb.dbo.sp_add_operator @name=@DBTeamName, 
 				@enabled=1, 
 				@pager_days=0, 
-				@email_address=@ITOps
-	ELSE
-		Print 'DBOPS ProcessParameter table does not have value for [IT Ops Team Escalation]. Please fix and run again.'
+			@email_address=@DBTeamName
 END
 
-IF NOT EXISTS (select * from msdb.dbo.sysoperators Where name = 'Dev Team')
+IF NOT EXISTS (select * from msdb.dbo.sysoperators Where name = @DevTeamName)
 BEGIN
-	SELECT @DevTeam = ParameterValue
-	From ProcessParameter
-	Where ParameterName = 'Dev Team Escalation'
-
-	IF @DevTeam IS NOT NULL
-		EXEC msdb.dbo.sp_add_operator @name=N'Dev Team', 
+		EXEC msdb.dbo.sp_add_operator @name=@DevTeamName, 
 			@enabled=1, 
 			@pager_days=0, 
-			@email_address=@DevTeam
-	ELSE
-		Print 'DBOPS ProcessParameter table does not have value for [Dev Team Escalation]. Please fix and run again.'
+			@email_address=@DevTeamDLToAlert
 END
 
-IF NOT EXISTS (select * from msdb.dbo.sysoperators Where name = 'IT Ops and Dev Team')
+IF NOT EXISTS (select * from msdb.dbo.sysoperators Where name = @DBandDevTeamName)
 BEGIN
-	--Note, assuming if both above didn't exist, this one didn't either and variables are populated.
-	SELECT @ITOpsandDevTeam = ParameterValue
-	From ProcessParameter
-	Where ParameterName = 'IT Ops & Dev Team Escalation'
-
-	IF @ITOpsandDevTeam IS NOT NULL
-		EXEC msdb.dbo.sp_add_operator @name=N'IT Ops and Dev Team', 
+		EXEC msdb.dbo.sp_add_operator @name=@DBandDevTeamName, 
 			@enabled=1, 
 			@pager_days=0, 
-			@email_address=@ITOpsandDevTeam
-	ELSE
-		Print 'DBOPS ProcessParameter table does not have value for [IT Ops & Dev Team Escalation]. Please fix and run again.'
+			@email_address=@DBandDevTeamDLToAlert
 END
 
 select * from msdb.dbo.sysoperators

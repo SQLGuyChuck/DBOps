@@ -8,7 +8,7 @@ CREATE TABLE [dbo].[ProcessParameter](
 	[ProcessParameterID] [int] IDENTITY(1,1) NOT NULL,
 	[ProcessID] [smallint] NOT NULL,
 	[ParameterName] [varchar](50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	[ParameterValue] [varchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[ParameterValue] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
  CONSTRAINT [PK_ProcessParameter] PRIMARY KEY CLUSTERED 
 (
 	[ProcessParameterID] ASC

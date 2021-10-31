@@ -9,7 +9,7 @@ GO
 --If not created already:
 USE [msdb]
 GO
-EXEC msdb.dbo.sp_add_operator @name=N'IT Ops', 
+EXEC msdb.dbo.sp_add_operator @name=N'DBOps', 
 		@enabled=1, 
 		@weekday_pager_start_time=0, 
 		@weekday_pager_end_time=0, 
@@ -92,7 +92,7 @@ where name in ('max degree of parallelism','max server memory (MB)','show advanc
 --Have a server to compare too:
 SELECT 'exec sp_configure '''+CAST(c1.name AS VARCHAR(1000))+''','+CAST(c1.value AS varchar(1000)),* 
 FROM sys.configurations c
-JOIN master.sys.configurations c1 ON c.configuration_id=c1.configuration_id
+JOIN [remoteservername].master.sys.configurations c1 ON c.configuration_id=c1.configuration_id
 WHERE c.value_in_use<>c1.value_in_use
 
 EXEC sp_configure 'show advanced options',1

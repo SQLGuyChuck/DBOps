@@ -20,8 +20,8 @@ GO
 */
 
 CREATE OR ALTER PROCEDURE dbo.<Procedure_Name,, ProcedureName>
-	<@Param1, sysname, @p1> <Datatype_For_Param1, , int> = <Default_Value_For_Param1, , 0>,
-	<@Param2, sysname, @p2> <Datatype_For_Param2, , int> = <Default_Value_For_Param2, , 0>
+	<@Param1, , @p1> <Datatype_For_Param1, , int> = <Default_Value_For_Param1, , 0>,
+	<@Param2, , @p2> <Datatype_For_Param2, , int> = <Default_Value_For_Param2, , 0>
 AS
 BEGIN
 -- ======================================================================================
