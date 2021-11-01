@@ -41,6 +41,7 @@ GO
 ** 06/15/2021 Chuck Lathrope Filegroupname output fix
 ** 07/13/2021 Chuck Lathrope Added another  /1024 to drive space calculation.
 ** 10/29/2021 Chuck Lathrope Update column types and column names.
+** 11/1/2021  Chuck Lathrope Add Filename and Filetype to store table.
 *******************************************************************************/            
 
 /****This proc is NON-destructive, it only prints out recommendations, you must review!******/          
@@ -309,8 +310,8 @@ Left JOIN sys.data_spaces ds WITH ( NOLOCK ) ON ds.data_space_id = f.data_space_
     
 
     IF @StoreSizeHistory = 1 --AND EXISTS (Select name From sys.sysdatabases Where name = 'DBOPS')
-		Insert into dbo.DBFileSpaceHistory (DBName, FileGroupName, LogicalFileName, FileSizeMB, FreeSpaceMB,DriveTotalGB, DriveAvailableGB, DrivePercentUsed)
-		Select DBName, FileGroupName, LogicalFileName, FileSizeMB, FreeSpaceMB, DriveTotalGB, DriveAvailableGB, DrivePercentUsed
+		Insert into dbo.DBFileSpaceHistory (DBName, FileGroupName, LogicalFileName, [Filename], FileSizeMB, FreeSpaceMB,FileType, DriveTotalGB, DriveAvailableGB, DrivePercentUsed)
+		Select DBName, FileGroupName, LogicalFileName, [Filename], FileSizeMB,  FreeSpaceMB, FileType, DriveTotalGB, DriveAvailableGB, DrivePercentUsed
 		From #DBFileListResults
 	
     IF @ShowDetails = 0  

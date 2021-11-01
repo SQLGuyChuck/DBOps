@@ -6,16 +6,18 @@ IF OBJECT_ID('dbo.DBFileSpaceHistory', 'U') IS NULL
 BEGIN
 
 CREATE TABLE [dbo].[DBFileSpaceHistory](
-	[DBFileSpaceHistoryID] [int] IDENTITY(1,1) NOT NULL,
-	[DBName] [sysname] NOT NULL,
-	[FileGroupName] [varchar](150) NULL,
-	[LogicalFilename] [nvarchar](520) NOT NULL,
-	[FileSizeMB] [int] NULL,
-	[FreeSpaceMB] [int] NULL,
-	[DriveTotalGB] [smallint] NULL,
-	[DriveAvailableGB] [smallint] NULL,
-	[DrivePercentUsed] [decimal](5, 2) NULL,
-	[DateCollected] [datetime2](2) NOT NULL,
+	DBFileSpaceHistoryID int IDENTITY(1,1) NOT NULL,
+	DBName sysname NOT NULL,
+	FileGroupName varchar(150) NULL,
+	LogicalFilename nvarchar(520) NOT NULL,
+	[Filename] nvarchar(520) NULL,
+	FileSizeMB int NULL,
+	FreeSpaceMB int NULL,
+	FileType varchar(15) NULL,
+	DriveTotalGB smallint NULL,
+	DriveAvailableGB smallint NULL,
+	DrivePercentUsed decimal(5, 2) NULL,
+	DateCollected datetime2(2) NOT NULL
 PRIMARY KEY CLUSTERED 
 (
 	[DBFileSpaceHistoryID] ASC
