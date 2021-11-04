@@ -42,6 +42,8 @@ GO
 ** 07/13/2021 Chuck Lathrope Added another  /1024 to drive space calculation.
 ** 10/29/2021 Chuck Lathrope Update column types and column names.
 ** 11/1/2021  Chuck Lathrope Add Filename and Filetype to store table.
+** 11/4/2021  Chuck Lathrope Add File types from sys.data_spaces for other than ROWS/LOG files.
+**    See: https://docs.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-data-spaces-transact-sql for other type desc.
 *******************************************************************************/            
 
 /****This proc is NON-destructive, it only prints out recommendations, you must review!******/          
@@ -174,6 +176,7 @@ BEGIN
         (  
           DBName VARCHAR(1000) ,  
           FileGroupName VARCHAR(150) ,  
+		  FileGroupType CHAR(2),
           LogicalFileName VARCHAR(1000) ,  
           [SpaceUsed] DECIMAL(18, 4) ,  
           FileSizeMB DECIMAL(18, 4) ,  
@@ -216,12 +219,14 @@ BEGIN
         SELECT  [name],  
                 'USE [' + [name] + ']           
 SELECT ''' + [name] + ''' AS DBName,   
-ds.name as FileGroupName,   
-f.name AS LogicalFileName,   
-size/128.0 as FileSizeMB,   
-size/128.0 - FILEPROPERTY(f.name, ''SpaceUsed'')/128.0 AS AvailableSpaceInMB   
-FROM sys.database_files f (NOLOCK)   
-Left JOIN sys.data_spaces ds WITH ( NOLOCK ) ON ds.data_space_id = f.data_space_id'  
+	ds.name as FileGroupName,
+	ISNULL(fg.type, ''LG'') as FileGroupType,
+	f.name AS LogicalFileName,
+	size/128.0 as FileSizeMB,
+	size/128.0 - FILEPROPERTY(f.name, ''SpaceUsed'')/128.0 AS AvailableSpaceInMB
+FROM sys.database_files f (NOLOCK)
+LEFT JOIN sys.filegroups fg (NOLOCK) ON fg.data_space_id = f.data_space_id
+LEFT JOIN sys.data_spaces ds WITH ( NOLOCK ) ON ds.data_space_id = f.data_space_id'  
         FROM sys.databases d 
 		LEFT JOIN sys.availability_replicas AS AR
 			ON d.replica_id = ar.replica_id
@@ -237,12 +242,14 @@ Left JOIN sys.data_spaces ds WITH ( NOLOCK ) ON ds.data_space_id = f.data_space_
         SELECT  [name],  
                 'USE [' + [name] + ']           
 SELECT ''' + [name] + ''' AS DBName,   
-ds.name as FileGroupName,   
-f.name AS LogicalFileName,   
-size/128.0 as FileSizeMB,   
-size/128.0 - FILEPROPERTY(f.name, ''SpaceUsed'')/128.0 AS AvailableSpaceInMB   
-FROM sys.database_files f (NOLOCK)   
-Left JOIN sys.data_spaces ds WITH ( NOLOCK ) ON ds.data_space_id = f.data_space_id'  
+	ds.name as FileGroupName,
+	ISNULL(fg.type, ''LG'') as FileGroupType,
+	f.name AS LogicalFileName,
+	size/128.0 as FileSizeMB,
+	size/128.0 - FILEPROPERTY(f.name, ''SpaceUsed'')/128.0 AS AvailableSpaceInMB
+FROM sys.database_files f (NOLOCK)
+LEFT JOIN sys.filegroups fg (NOLOCK) ON fg.data_space_id = f.data_space_id
+LEFT JOIN sys.data_spaces ds WITH ( NOLOCK ) ON ds.data_space_id = f.data_space_id'  
         FROM sys.databases d 
 		WHERE state_desc = 'ONLINE'  
 		AND [Name] = ISNULL(@Dbname, [Name]) 
@@ -254,7 +261,7 @@ Left JOIN sys.data_spaces ds WITH ( NOLOCK ) ON ds.data_space_id = f.data_space_
         FROM    @DBList  
         WHERE   ID = @Pointer            
           
-        INSERT  INTO #Space ( DBName, FileGroupName, LogicalFileName, FileSizeMB, AvailableSpaceMB )  
+        INSERT  INTO #Space ( DBName, FileGroupName, FileGroupType, LogicalFileName, FileSizeMB, AvailableSpaceMB )  
                 EXEC sp_executesql @SQL         
           
         SET @Pointer = @Pointer + 1            
@@ -272,7 +279,7 @@ Left JOIN sys.data_spaces ds WITH ( NOLOCK ) ON ds.data_space_id = f.data_space_
             physical_name AS FileName, 
 			CAST(ts.FileSizeMB as INT) as FileSizeMB,
             CAST(ISNULL(ts.[AvailableSpaceMB], 0) as INT) AS FreeSpaceMB,  
-            f.type_desc AS FileType,  
+            CASE WHEN f.type_desc IN ('ROWS','LOG') THEN f.type_desc ELSE ts.FileGroupType END AS FileType,  
             CASE WHEN max_size > 1 THEN max_size / 128  
                     ELSE max_size  
             END AS max_size,  
