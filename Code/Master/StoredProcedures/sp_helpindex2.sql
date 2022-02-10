@@ -13,7 +13,8 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_helpindex2]
 	@objname nvarchar(776)		-- the table to check for indexes
-as
+AS
+--		Feb 2022: Add partition count and compression desc
 --		Jul 2021: Add FillFactor and support for indexed view included columns.
 --     June 2016: Support for clustered columnstore as well as removing
 --                errors around other index types (hekaton, XML, spatial, etc.)
@@ -56,7 +57,9 @@ as
 			@filter_definition nvarchar(max),
 			@ColsInTree nvarchar(2126),
 			@ColsInLeaf nvarchar(max),
-            @ExecStr nvarchar(max)
+            @ExecStr nvarchar(max),
+			@partition_count INT, 
+			@data_compression_desc VARCHAR(20)
 
 	-- Check to see that the object names are local to the current database.
 	select @dbname = parsename(@objname,3)
@@ -80,15 +83,21 @@ as
 	declare ms_crs_ind cursor local static for
 		select i.index_id, i.[type], i.data_space_id, QUOTENAME(i.name, N']') AS name,
 			i.ignore_dup_key, i.is_unique, i.is_hypothetical, i.is_primary_key, i.is_unique_constraint,
-			s.auto_created, s.no_recompute, i.filter_definition, i.is_disabled, i.fill_factor
+			s.auto_created, s.no_recompute, i.filter_definition, i.is_disabled, i.fill_factor, COUNT(*) AS partition_count, P.data_compression_desc
 		from sys.indexes as i 
 			join sys.stats as s
 				on i.object_id = s.object_id 
 					and i.index_id = s.stats_id
+			JOIN sys.partitions p ON i.object_id = p.object_id AND i.index_id = p.index_id
 		where i.object_id = @objid
+		GROUP BY i.index_id, i.[type], i.data_space_id, QUOTENAME(i.name, N']'),
+			i.ignore_dup_key, i.is_unique, i.is_hypothetical, i.is_primary_key, i.is_unique_constraint,
+			s.auto_created, s.no_recompute, i.filter_definition, i.is_disabled, i.fill_factor, P.data_compression_desc
+		
 	open ms_crs_ind
 	fetch ms_crs_ind into @indid, @type, @groupid, @indname, @ignore_dup_key, @is_unique, @is_hypothetical,
-			@is_primary_key, @is_unique_key, @auto_created, @no_recompute, @filter_definition, @is_disabled, @fill_factor
+			@is_primary_key, @is_unique_key, @auto_created, @no_recompute, @filter_definition, @is_disabled, @fill_factor, @partition_count, @data_compression_desc
+
 
 	-- IF NO INDEX, QUIT
 	if @@fetch_status < 0
@@ -119,7 +128,9 @@ as
 		inc_columns			nvarchar(max),
 		cols_in_tree		nvarchar(2126),
 		cols_in_leaf		nvarchar(max),
-		fill_factor			TINYINT
+		fill_factor			TINYINT,
+		partition_count		INT, 
+		data_compression_desc VARCHAR(20)
 	)
 
 	CREATE TABLE #IncludedColumns
@@ -301,11 +312,11 @@ as
 		-- INSERT ROW FOR INDEX
 		
 		insert into #spindtab values (@indname, @indid, @type, @ignore_dup_key, @is_unique, @is_hypothetical,
-			@is_primary_key, @is_unique_key, @is_disabled, @auto_created, @no_recompute, @groupname, @keys, @filter_definition, @inc_Count, @inc_columns, @ColsInTree, @ColsInLeaf, @fill_factor)
+			@is_primary_key, @is_unique_key, @is_disabled, @auto_created, @no_recompute, @groupname, @keys, @filter_definition, @inc_Count, @inc_columns, @ColsInTree, @ColsInLeaf, @fill_factor, @partition_count, @data_compression_desc)
 
 		-- Next index
     	fetch ms_crs_ind into @indid, @type, @groupid, @indname, @ignore_dup_key, @is_unique, @is_hypothetical,
-			@is_primary_key, @is_unique_key, @auto_created, @no_recompute, @filter_definition, @is_disabled, @fill_factor
+			@is_primary_key, @is_unique_key, @auto_created, @no_recompute, @filter_definition, @is_disabled, @fill_factor, @partition_count, @data_compression_desc
 	end
 	deallocate ms_crs_ind
 
@@ -348,6 +359,8 @@ as
                            when type = 7 then ''n/a, HASH''
 			          else filter_definition end,
 			       ''fill_factor'' = fill_factor,
+				   ''partition_count'' = partition_count,
+				   ''data_compression'' = data_compression_desc,
 		           ''columns_in_tree'' = 
 			          case when type IN (5, 6) then ''n/a, columnstore index''
                            when type = 7 then ''n/a, HASH''
@@ -399,6 +412,8 @@ as
                            when type = 7 then ''n/a, HASH''
 			          else filter_definition end,
 		           ''fill_factor'' = fill_factor,
+				   ''partition_count'' = partition_count,
+				   ''data_compression'' = data_compression_desc,
 				   ''columns_in_tree'' = 
 			          case when type IN (5, 6) then ''n/a, columnstore index''
                            when type = 7 then ''n/a, HASH''
